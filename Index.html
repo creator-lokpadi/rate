@@ -1,135 +1,164 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Perhitungan Harga Barang</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<style>
-  table {
-    border-collapse: collapse;
-    width: 100%;
-  }
-  th, td {
-    border: 1px solid #dddddd;
-    text-align: left;
-    padding: 8px;
-  }
-  th {
-    background-color: #f2f2f2;
-  }
-</style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: 'Lora', serif;
+            margin: 0;
+            overflow: hidden;
+        }
+        #background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            min-width: 100%;
+            min-height: 100%;
+            z-index: -1;
+        }
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #0ff;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        .profile-image {
+            position: relative;
+            border-radius: 50%;
+            width: 150px; /* Ubah lebar foto profil sesuai kebutuhan */
+            height: 150px; /* Ubah tinggi foto profil sesuai kebutuhan */
+            margin-bottom: 20px;
+            overflow: hidden;
+            border: 2px solid #0ff;
+        }
+        .audio-animation {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url('https://your-audio-wave-image.png'); /* Ganti URL dengan gambar gelombang audio yang sesuai */
+            background-repeat: repeat-x;
+            background-size: 100% auto;
+            opacity: 0.3;
+            animation: animate-audio-wave 2s linear infinite;
+        }
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .play-button button {
+            background-color: transparent;
+            border: none;
+            font-size: 36px;
+            color: transparent; /* Buat tombol play transparan */
+            cursor: pointer;
+        }
+        .play-button button:focus {
+            outline: none;
+        }
+        .profile-image img {
+            width: 100%;
+            height: 100%;
+        }
+        .profile-info {
+            text-align: center;
+        }
+        .profile-name {
+            font-size: 24px;
+            text-shadow: 0 0 10px #e10000, 0 0 20px #e10000, 0 0 30px #e10000;
+            color: #e10000;
+        }
+        .profile-bio {
+            font-size: 16px;
+            margin-top: 20px;
+            padding: 0 20px;
+            color: #ffffffbf;
+        }
+        .status-online {
+            font-size: 18px;
+            animation: blink 1s linear infinite;
+            margin-top: 20px;
+            color: #29ff00f6;
+        }
+        .social-icons {
+            margin-top: 20px;
+        }
+        .social-icons a {
+            text-decoration: none;
+            color: #ffffff;
+            margin: 0 10px;
+            font-size: 24px;
+        }
+        @keyframes blink {
+            0% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+        @keyframes animate-audio-wave {
+            to {
+                background-position: -100% center;
+            }
+        }
+    </style>
 </head>
 <body>
+    <audio id="audio" autoplay loop>
+        <source src="./audio.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
 
-<table border="1" id="tabel_barang">
-  <thead>
-    <tr>
-      <th>No</th>
-      <th>Nama Barang</th>
-      <th>Pcs</th>
-      <th>Harga</th>
-      <th>Jumlah dipesan</th>
-      <th>Total</th>
-      <th>Total Pcs</th>
-    </tr>
-  </thead>
-  <tbody>
-    <!-- Baris akan dimasukkan oleh JavaScript -->
-  </tbody>
-  <tfoot>
-    <tr>
-      <td colspan="5">Total keseluruhan</td>
-      <td><span id="total_keseluruhan">0</span></td>
-      <td><span id="total_pcs">0</span></td>
-    </tr>
-  </tfoot>
-</table>
+    <video autoplay muted loop id="background-video">
+        <source src="https://telegra.ph/file/cad06ae326042101dc3f1.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
 
-<button onclick="tambahkanBaris()">Tambah Barang</button>
-<button onclick="resetTabel()">Reset Tabel</button>
-<button onclick="simpanData()">Simpan</button>
+    <div class="profile-container">
+        <div class="profile-image">
+            <div class="audio-animation"></div>
+            <img src="https://telegra.ph/file/1da2e7a13f866f6503a80.jpg" alt="Profile Picture">
+            <div class="play-button">
+                <button id="play-button">&#9654;</button>
+            </div>
+        </div>
+        <div class="profile-info">
+            <div class="profile-name">Muhammad Andriani</div>
+            <div class="status-online">Online di WhatsApp</div>
+            <div class="profile-bio">
+                <strong>Nama:</strong> Muhammad Andriani<br>
+                <strong>Pekerjaan:</strong> Pengembang dan pemilik TEAMCREATORLOKPADI<br><br>
 
-<script>
-  var dataBarang = [];
+                <strong>Deskripsi Singkat:</strong><br>
+                Muhammad Andriani adalah pemilik TEAMCREATORLOKPADI. Dengan latar belakang dalam pengembangan chatbot dan solusi berbasis teks, ia berkomitmen untuk meningkatkan pengalaman pengguna melalui inovasi.<br><br>
 
-  function hitungTotal() {
-    var totalSemua = 0;
-    var totalPcs = 0;
-    var tabel = document.getElementById("tabel_barang");
-    for (var i = 1; i < tabel.rows.length - 1; i++) {
-      var harga = parseInt(tabel.rows[i].cells[3].querySelector('input').value);
-      var jumlah = parseInt(tabel.rows[i].cells[4].querySelector('input').value);
-      var total = harga * jumlah;
-      var pcs = parseInt(tabel.rows[i].cells[2].querySelector('input').value);
-      tabel.rows[i].cells[5].innerHTML = total;
-      tabel.rows[i].cells[6].innerHTML = pcs * jumlah;
-      totalSemua += total;
-      totalPcs += pcs * jumlah;
-    }
-    document.getElementById("total_keseluruhan").innerHTML = totalSemua;
-    document.getElementById("total_pcs").innerHTML = totalPcs;
-  }
+                <strong>Kontribusi ChatGPT:</strong><br>
+                Dengan dukungan kecerdasan buatan ChatGPT, Muhammad Andriani berhasil menciptakan bot WhatsApp yang inovatif. ChatGPT membantu merespons pertanyaan pengguna WhatsApp dengan akurat.<br><br>
 
-  function tambahkanBaris() {
-    var tabel = document.getElementById("tabel_barang");
-    var nomorBaris = tabel.rows.length;
-    var row = tabel.insertRow(nomorBaris - 1);
-    row.innerHTML = `
-      <td>${nomorBaris}</td>
-      <td><input type="text" class="nama_barang" value="Barang baru" onchange="hitungTotal()"></td>
-      <td><input type="number" class="pcs_barang" value="0" onchange="hitungTotal()"></td>
-      <td><input type="number" class="harga_barang" value="0" onchange="hitungTotal()"></td>
-      <td><input type="number" class="jumlah_barang" value="0" onchange="hitungTotal()"></td>
-      <td>0</td>
-      <td>0</td>
-    `;
-    hitungTotal();
-  }
+                <strong>Visi:</strong><br>
+                Muhammad Andriani dan timnya di TEAMCREATORLOKPADI memiliki visi untuk terus mengembangkan solusi chatbot yang canggih dan berguna bagi pengguna WhatsApp, menciptakan pengalaman interaksi yang lebih baik antara manusia dan teknologi.<br>
+            </div>
+        </div>
+        <div class="social-icons">
+            <a href="https://wa.me/6282321720820"><i class="fa fa-whatsapp"></i></a>
+            <a href="https://www.facebook.com/muhamad.andriani.56211"><i class="fa fa-facebook"></i></a>
+            <a href="https://instagram.com/creator_lokpadi501?igshid=OGY3MTU3OGY1Mw=="><i class="fa fa-instagram"></i></a>
+        </div>
+    </div>
 
-  function resetTabel() {
-    var tabel = document.getElementById("tabel_barang");
-    while (tabel.rows.length > 2) {
-      tabel.deleteRow(1);
-    }
-    hitungTotal();
-    localStorage.removeItem('dataBarang');
-  }
+    <script>
+        var audio = document.getElementById("audio");
 
-  function simpanData() {
-    var tabel = document.getElementById("tabel_barang");
-    dataBarang = [];
-    for (var i = 1; i < tabel.rows.length - 1; i++) {
-      var nama = tabel.rows[i].cells[1].querySelector('input').value;
-      var harga = parseInt(tabel.rows[i].cells[3].querySelector('input').value);
-      var jumlah = parseInt(tabel.rows[i].cells[4].querySelector('input').value);
-      var pcs = parseInt(tabel.rows[i].cells[2].querySelector('input').value);
-      dataBarang.push({ nama: nama, harga: harga, jumlah: jumlah, pcs: pcs });
-    }
-    localStorage.setItem('dataBarang', JSON.stringify(dataBarang));
-  }
-
-  window.onload = function() {
-    var savedData = localStorage.getItem('dataBarang');
-    if (savedData) {
-      dataBarang = JSON.parse(savedData);
-      var tabel = document.getElementById("tabel_barang");
-      for (var i = 0; i < dataBarang.length; i++) {
-        var row = tabel.insertRow(tabel.rows.length - 1);
-        row.innerHTML = `
-          <td>${i + 1}</td>
-          <td><input type="text" class="nama_barang" value="${dataBarang[i].nama}" onchange="hitungTotal()"></td>
-          <td><input type="number" class="pcs_barang" value="${dataBarang[i].pcs}" onchange="hitungTotal()"></td>
-          <td><input type="number" class="harga_barang" value="${dataBarang[i].harga}" onchange="hitungTotal()"></td>
-          <td><input type="number" class="jumlah_barang" value="${dataBarang[i].jumlah}" onchange="hitungTotal()"></td>
-          <td>${dataBarang[i].harga * dataBarang[i].jumlah}</td>
-          <td>${dataBarang[i].pcs * dataBarang[i].jumlah}</td>
-        `;
-      }
-      hitungTotal();
-    }
-  };
-</script>
-
+        // Autoplay audio on page load
+        audio.play();
+    </script>
 </body>
-</html>
+  </html>
