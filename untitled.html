@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perhitungan Harga Barang</title>
+<style>
+  /* CSS untuk popup */
+  .popup {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #fefefe;
+    border: 1px solid #888;
+    padding: 20px;
+    z-index: 9999;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 9998;
+  }
+</style>
+<script>
+  var dataBarang = [];
+
+  function hitungTotal() {
+    var totalSemua = 0;
+    var totalPcs = 0;
+    var tabel = document.getElementById("tabel_barang");
+    for (var i = 1; i < tabel.rows.length - 1; i++) {
+      var harga = parseInt(tabel.rows[i].cells[2].querySelector('input').value);
+      var jumlahOrder = parseInt(tabel.rows[i].cells[3].querySelector('input').value);
+      var totalHarga = harga * jumlahOrder;
+      var jumlahPcsInput = tabel.rows[i].cells[1].querySelector('input');
+      var jumlahPcs = parseInt(jumlahPcsInput.value);
+      // Periksa apakah nilai "Jumlah Pcs" valid
+      if (isNaN(jumlahPcs)) {
+        alert("Masukkan jumlah pcs yang valid.");
+        jumlahPcsInput.value = 0; // Setel nilai default ke 0
+        jumlahPcs = 0; // Setel nilai jumlahPcs ke 0
+      }
+      var totalPcsBarang = jumlahPcs * jumlahOrder;
+      tabel.rows[i].cells[4].innerHTML = totalHarga;
+      tabel.rows[i].cells[5].innerHTML = totalPcsBarang;
+      totalSemua += totalHarga;
+      totalPcs += totalPcsBarang;
+    }
+    document.getElementById("total_keseluruhan").innerHTML = totalSemua;
+    document.getElementById("total_pcs").innerHTML = totalPcs;
+    simpanData(); // Simpan data setiap kali hitung total dipanggil
+  }
+
+  function tambahkanBaris() {
+    var tabel = document.getElementById("tabel_barang");
+    var nomorBaris = tabel.rows.length;
+    var row = tabel.insertRow(nomorBaris - 1);
+    row.innerHTML = `
+      <td><input type="text" class="nama_barang" value="Barang baru"></td>
+      <td><input type="number" class="jumlah_pcs" value="0" onchange="hitungTotal()"></td>
+      <td><input type="number" class="harga_barang" value="0" onchange="hitungTotal()"></td>
+      <td><input type="number" class="jumlah_order" value="0" onchange="hitungTotal()"></td>
+      <td>0</td>
+      <td>0</td>
+    `;
+    hitungTotal();
+  }
+
+  function resetTabel() {
+    var tabel = document.getElementById("tabel_barang");
+    while (tabel.rows.length > 2) {
+      tabel.deleteRow(1);
+    }
+    hitungTotal(); // Hitung ulang total setelah reset
+    localStorage.removeItem('dataBarang');
+  }
+
+  function simpanData() {
+    var tabel = document.getElementById("tabel_barang");
+    dataBarang = [];
+    for (var i = 1; i < tabel.rows.length - 1; i++) {
+      var nama = tabel.rows[i].cells[0].querySelector('input').value;
+      var jumlahPcs = parseInt(tabel.rows[i].cells[1].querySelector('input').value);
+      var harga = parseInt(tabel.rows[i].cells[2].querySelector('input').value);
+      var jumlahOrder = parseInt(tabel.rows[i].cells[3].querySelector('input').value);
+      dataBarang.push({ nama: nama, jumlahPcs: jumlahPcs, harga: harga, jumlahOrder: jumlahOrder });
+    }
+    localStorage.setItem('dataBarang', JSON.stringify(dataBarang));
+  }
+
+  function showPopup() {
+    document.getElementById("popup").style.display = "block";
+    document.getElementById("popup-overlay").style.display = "block";
+  }
+
+  function hidePopup() {
+    document.getElementById("popup").style.display = "none";
+    document.getElementById("popup-overlay").style.display = "none";
+  }
+
+  function hitungPembagian() {
+    var pembagi1 = parseInt(document.getElementById("pembagi1").value);
+    var pembagi2 = parseInt(document.getElementById("pembagi2").value);
+    var hasilPembagian = pembagi1 / pembagi2;
+    document.getElementById("hasil_pembagian").innerHTML = hasilPembagian;
+  }
+</script>
+</head>
+<body>
+
+<table border="1" id="tabel_barang">
+  <thead>
+    <tr>
+      <th>Nama Barang</th>
+      <th>Jumlah Pcs</th>
+      <th>Harga $</th>
+      <th>Jumlah Order</th>
+      <th>Total Harga $</th>
+      <th>Total Pcs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- Isi tabel -->
+  </tbody>
+  <tfoot>
+    <tr>
+      <td colspan="4">Total keseluruhan</td>
+      <td><span id="total_keseluruhan">0</span></td>
+      <td><span id="total_pcs">0</span></td>
+    </tr>
+  </tfoot>
+</table>
+
+<button onclick="tambahkanBaris()">Tambah Barang</button>
+<button onclick="resetTabel()">Reset Tabel</button>
+<button onclick="simpanData()">Simpan</button>
+<button onclick="showPopup()">Tampilkan Pembagian Khusus</button>
+
+<!-- Popup -->
+<div class="popup-overlay" id="popup-overlay" onclick="hidePopup()"></div>
+<div class="popup" id="popup">
+  <h2>Pembagian Khusus</h2>
+  <input type="number" id="pembagi1" placeholder="Masukkan angka pertama"> :
+  <input type="number" id="pembagi2" placeholder="Masukkan angka kedua"> =
+  <button onclick="hitungPembagian()">Hitung</button>
+  <p>Hasil pembagian: <span id="hasil_pembagian"></span></p>
+  <button onclick="hidePopup()">Tutup</button>
+</div>
+
+<script>
+  // Memuat kembali data saat halaman dimuat
+  window.onload = function() {
+    var savedData = localStorage.getItem('dataBarang');
+    if (savedData) {
+      dataBarang = JSON.parse(savedData);
+      var tabel = document.getElementById("tabel_barang");
+      for (var i = 0; i < dataBarang.length; i++) {
+        var row = tabel.insertRow(tabel.rows.length - 1);
+        row.innerHTML = `
+          <td><input type="text" class="nama_barang" value="${dataBarang[i].nama}" onchange="hitungTotal()"></td>
+          <td><input type="number" class="jumlah_pcs" value="${dataBarang[i].jumlahPcs}" onchange="hitungTotal()"></td>
+          <td><input type="number" class="harga_barang" value="${dataBarang[i].harga}" onchange="hitungTotal()"></td>
+          <td><input type="number" class="jumlah_order" value="${dataBarang[i].jumlahOrder}" onchange="hitungTotal()"></td>
+          <td>${dataBarang[i].harga * dataBarang[i].jumlahOrder}</td>
+          <td>${dataBarang[i].jumlahPcs * dataBarang[i].jumlahOrder}</td>
+        `;
+      }
+      hitungTotal();
+    }
+  };
+</script>
+
+</body>
+</html>
